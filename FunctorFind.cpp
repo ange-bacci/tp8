@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <finder.hpp>
+#include <unary.hpp>
 
 using namespace std;
 
@@ -41,6 +42,16 @@ namespace {
         FindTrancheAge(const unsigned &ageMin, const unsigned &ageMax) : ageMin(ageMin), ageMax(ageMax) {}
         virtual bool operator() (const Pers &personne) const {
             return personne.getAge() >= this->ageMin && personne.getAge() <= this->ageMax;
+        }
+    };
+
+    class FindNomMin : public Finder<Pers> {
+        string nomMin;
+
+    public:
+        FindNomMin(const string &nomMin) : nomMin(nomMin) {}
+        virtual bool operator() (const Pers &personne) const {
+            return nomMin < personne.getNom();
         }
     };
 
@@ -95,6 +106,24 @@ namespace {
             cout << *pos << '\n';
 
         cout << '\n';
+
+        cout << "\nRecherche sur nom > Noemie : ";
+
+        pos = find_if (vPers.begin (),  vPers.end (), FindNomMin("Noemie"));
+
+        if (vPers.end () == pos)
+            cout  << "Aucun element ne correspond a ce critere\n";
+        else
+            cout << *pos << '\n';
+
+        cout  << "\nRecherche sur nom > alfred : ";
+
+        pos = find_if (vPers.begin (),  vPers.end (), FindNomMin("alfred"));
+
+        if (vPers.end () == pos)
+            cout  << "Aucun element ne correspond a ce critere\n";
+        else
+            cout << *pos << '\n';
 
     } // functorFind()
 
