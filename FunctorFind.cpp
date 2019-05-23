@@ -32,7 +32,7 @@ namespace {
 
     }; // Pers
 
-    class FindTrancheAge : public Finder<Pers> {
+    class FindTrancheAge : public Unary<Pers, bool> {
 
         unsigned ageMin;
         unsigned ageMax;
@@ -45,7 +45,7 @@ namespace {
         }
     };
 
-    class FindNomMin : public Finder<Pers> {
+    class FindNomMin : public Unary<Pers, bool> {
         string nomMin;
 
     public:
@@ -55,8 +55,8 @@ namespace {
         }
     };
 
-    template <class T>
-    typename vector<T>::iterator find_if(const typename vector<T>::iterator &begin, const typename vector<T>::iterator &end, const Finder<T> &finder) {
+    template <class T, class R>
+    typename vector<T>::iterator find_if(const typename vector<T>::iterator &begin, const typename vector<T>::iterator &end, const Unary<T, R> &finder) {
         typename vector<T>::iterator pos = begin;
         typename vector<T>::iterator last = end;
 
