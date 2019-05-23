@@ -13,19 +13,13 @@
 #include <string>
 #include <algorithm>            // sort()
 #include <vector>
- 
+#include "comparator.hpp"
+
 using namespace std;
- 
+
 namespace
 {
-    template <typename T>
-    class ILessThanGen
-    {
-      public :
-        virtual ~ILessThanGen (void) {}
-        virtual bool operator () (const T &, const T &) const = 0;
- 
-    }; // ILessThanGen
+ // ILessThanGen
  
     class Pers
     {
@@ -55,7 +49,7 @@ namespace
  
     }; // Pers
  
-    class TriParAgeAsc : public ILessThanGen <Pers>
+    class TriParAgeAsc : public Comparator <Pers>
     {
       public :
         virtual ~TriParAgeAsc (void) noexcept {}
@@ -69,7 +63,7 @@ namespace
  
     }; // TriParAgeAsc
  
-    class TriParNomDesc : public ILessThanGen <Pers>
+    class TriParNomDesc : public Comparator <Pers>
     {
       public :
         virtual ~TriParNomDesc (void) noexcept {}
@@ -83,6 +77,36 @@ namespace
  
     }; // TriParNomDesc
  
+    template <typename T>
+    typename vector<T>::iterator partitionnement(const typename vector<T>::iterator &first, const typename vector<T>::iterator &last, const Comparator<T> &comp) {
+        bool isUp = true;
+        typename vector<T>::iterator pivot = first;
+        typename vector<T>::iterator current = last;
+        int incr = -1;
+
+        while (pivot != current) {
+            if ((!isUp && comp(*pivot, *current)) || (isUp && comp(*current, *pivot))) {
+                swap(*pivot, *current);
+                swap(pivot, current);
+
+                isUp = !isUp;
+                incr = -incr;
+            }
+            current += incr;
+        }
+        return pivot;
+    }
+
+    template <typename T>
+    void quickSort(const typename vector<T>::iterator &begin, const typename vector<T>::iterator &end, const Comparator<T> &comp) {
+        if (begin < end) {
+            typename vector<T>::iterator pos = partitionnement(begin, end - 1, comp);
+
+            quickSort(begin, pos, comp);
+            quickSort(pos + 1, end, comp);
+        }
+    }
+
     void functorSort (void)
     {
         cout << "FunctorSort : \n";
@@ -101,22 +125,26 @@ namespace
         vPers.push_back ( Pers ("Pierre",    75));
  
         cout << "\nTri par age croissant\n\n";
- 
-        sort (vPers.begin (), vPers.end (), TriParAgeAsc ());
+
+        quickSort (vPers.begin(), vPers.end(), TriParAgeAsc());
  
         for (const Pers & personne : vPers)
             cout << personne << '\n';
  
         cout << "\nTri par nom decroissant\n\n";
- 
-        sort (vPers.begin (), vPers.end (), TriParNomDesc ());
+
+
+        quickSort (vPers.begin(), vPers.end(), TriParNomDesc());
  
         for (const Pers & personne : vPers)
             cout << personne << '\n';
  
     } // functorSort()
+
+
  
 } // namespace
+
  
 int main (void)
 {
