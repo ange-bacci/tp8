@@ -8,4 +8,4 @@ SOURCES += \
     FunctorSort.cpp \
     IntegrTrapeze.cpp \
     FunctorFind.cpp \
-    binarysort.cpp
+    BinarySort.cpp
