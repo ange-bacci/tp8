@@ -15,16 +15,32 @@
  **/
 #include <iostream>
 #include <cmath>               // cos(), sin(), M_PI_2
+#include "unary.hpp"
  
 using namespace std;
  
 namespace
 {
-    typedef double (*fdeX) (double);
- 
-    double integrTrapezes (fdeX f, double a, double b, unsigned n)
+
+    class UnaryCos : public Unary<double, double>
     {
-        double s     = (f (a) + f (b)) / 2.0; 
+    public:
+        virtual double operator()(const double &d) const {
+            return cos(d);
+        }
+    };
+
+    class UnarySin : public Unary<double, double>
+    {
+    public:
+        virtual double operator()(const double &d) const {
+            return sin(d);
+        }
+    };
+
+    double integrTrapezes (const Unary<double, double> &f, double a, double b, unsigned n)
+    {
+        double s     = (f (a) + f (b)) / 2.0;
         double delta = (b - a) / double (n);
  
         for ( ; --n; ) s += f (a += delta);
@@ -39,31 +55,31 @@ namespace
  
         cout << "Methode des trapezes : \n";
  
-        cout << "S (cos (x)) entre 0 et +Pi/2  avec   5 intervalles = " 
-             << integrTrapezes (cos, 0, M_PI_2,   5) << '\n';
+        cout << "S (cos (x)) entre 0 et +Pi/2  avec   5 intervalles = "
+             << integrTrapezes (UnaryCos(), 0, M_PI_2,   5) << '\n';
  
-        cout << "S (cos (x)) entre 0 et +Pi/2  avec  10 intervalles = " 
-             << integrTrapezes (cos, 0, M_PI_2,  10) << '\n';
+        cout << "S (cos (x)) entre 0 et +Pi/2  avec  10 intervalles = "
+             << integrTrapezes (UnaryCos(), 0, M_PI_2,  10) << '\n';
  
-        cout << "S (cos (x)) entre 0 et +Pi/2  avec  50 intervalles = " 
-             << integrTrapezes (cos, 0, M_PI_2,  50) << '\n';
+        cout << "S (cos (x)) entre 0 et +Pi/2  avec  50 intervalles = "
+             << integrTrapezes (UnaryCos(), 0, M_PI_2,  50) << '\n';
  
-        cout << "S (cos (x)) entre 0 et +Pi/2  avec 100 intervalles = " 
-             << integrTrapezes (cos, 0, M_PI_2, 100) << '\n';
+        cout << "S (cos (x)) entre 0 et +Pi/2  avec 100 intervalles = "
+             << integrTrapezes (UnaryCos(), 0, M_PI_2, 100) << '\n';
  
         cout << '\n';
  
-        cout << "S (sin (x)) entre -Pi/2 et 0  avec   5 intervalles = " 
-             << integrTrapezes (sin, -M_PI_2, 0,   5) << '\n';
+        cout << "S (sin (x)) entre -Pi/2 et 0  avec   5 intervalles = "
+             << integrTrapezes (UnarySin(), -M_PI_2, 0,   5) << '\n';
  
-        cout << "S (sin (x)) entre -Pi/2 et 0  avec  10 intervalles = " 
-             << integrTrapezes (sin, -M_PI_2, 0,  10) << '\n';
+        cout << "S (sin (x)) entre -Pi/2 et 0  avec  10 intervalles = "
+             << integrTrapezes (UnarySin(), -M_PI_2, 0,  10) << '\n';
  
-        cout << "S (sin (x)) entre -Pi/2 et 0  avec  50 intervalles = " 
-             << integrTrapezes (sin, -M_PI_2, 0,  50) << '\n';
+        cout << "S (sin (x)) entre -Pi/2 et 0  avec  50 intervalles = "
+             << integrTrapezes (UnarySin(), -M_PI_2, 0,  50) << '\n';
  
-        cout << "S (sin (x)) entre -Pi/2 et 0  avec 100 intervalles = " 
-             << integrTrapezes (sin, -M_PI_2, 0, 100) << '\n';
+        cout << "S (sin (x)) entre -Pi/2 et 0  avec 100 intervalles = "
+             << integrTrapezes (UnarySin(), -M_PI_2, 0, 100) << '\n';
  
     } // TestIntegrTrapezes()
  
@@ -71,7 +87,7 @@ namespace
  
 int main (void)
 {
-    TestIntegrTrapezes ();
+    testIntegrTrapezes ();
  
     return 0;
  

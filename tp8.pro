@@ -1,11 +1,11 @@
 HEADERS += \
     comparator.hpp \
     finder.hpp \
-    unary.hpp
+    unary.hpp \
+    binary.hpp
 
 SOURCES += \
-    adaptorSuite.cpp \
-    functorFindSuite.cpp \
     FunctorSort.cpp \
     IntegrTrapeze.cpp \
-    FunctorFind.cpp
+    FunctorFind.cpp \
+    binarysort.cpp
